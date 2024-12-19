@@ -17,23 +17,29 @@ class NostrService extends NetworkService {
     'wss://relay.damus.io/',
     'wss://bitcoiner.social/',
     'wss://relay.ryzizub.com/',
+    'wss://relay.primal.net/',
   ];
 
   @override
   Future<void> sendPrice(int price) async {
-    final text = 'Current ATH: ${PriceUtils.formatPrice(price)}';
+    final publicKey = Nip19.encodePubkey(
+      Keychain(const String.fromEnvironment('NOSTR')).public,
+    );
 
-    _logger.info('Sending event to Nostr...');
+    _logger
+      ..infoNostr('Sending message...')
+      ..infoNostr('Account: $publicKey');
 
     final content = Event.from(
       kind: 1,
       tags: [],
-      content: text,
+      content: TextUtils.priceText(price),
       privkey: const String.fromEnvironment('NOSTR'),
     );
 
     await Future.forEach(setOfRelays, (relayUrl) async {
       try {
+        _logger.info('Sending message to nostr: $relayUrl ${content.id}');
         await sendEvent(content, relayUrl);
       } catch (e) {
         _logger.err('Error sending event to $relayUrl: $e');
@@ -45,7 +51,8 @@ class NostrService extends NetworkService {
     final websocket = await WebSocket.connect(
       relayUrl,
     );
-    websocket.add(event.serialize());
+    // websocket.add(event.serialize());
+    await Future<dynamic>.delayed(const Duration(seconds: 1));
     await websocket.close();
   }
 }

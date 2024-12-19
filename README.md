@@ -8,7 +8,7 @@
 ## Usage
 
 ```sh
-$ dart lib/main.dart --dart-define-from-file=.env
+$ dart lib/main.dart --define=NOSTR={your_nostr_key}
 ```
 
 [license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
