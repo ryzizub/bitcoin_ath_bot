@@ -15,7 +15,12 @@ COPY . .
 RUN dart pub get --offline
 
 # Compile the application
-RUN dart compile exe lib/main.dart -o bitcoin_ath_bot
+RUN dart compile exe lib/main.dart  \
+    --define=NOSTR="${NOSTR}" \
+    --define=BLUESKY_IDENTIFIER="${BLUESKY_IDENTIFIER}" \
+    --define=BLUESKY_PASSWORD="${BLUESKY_PASSWORD}" \
+    --define=MASTODON_BEARER_TOKEN="${MASTODON_BEARER_TOKEN}" \
+    -o bitcoin_ath_bot
 
 # # Create a smaller runtime image
 FROM debian:stable-slim
