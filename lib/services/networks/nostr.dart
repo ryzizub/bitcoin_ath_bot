@@ -23,7 +23,7 @@ class NostrService extends NetworkService {
   @override
   Future<void> sendPrice(int price) async {
     final publicKey = Nip19.encodePubkey(
-      Keychain(const String.fromEnvironment('NOSTR')).public,
+      Keychain(Platform.environment['NOSTR']!).public,
     );
 
     _logger
@@ -34,7 +34,7 @@ class NostrService extends NetworkService {
       kind: 1,
       tags: [],
       content: TextUtils.priceText(price),
-      privkey: const String.fromEnvironment('NOSTR'),
+      privkey: Platform.environment['NOSTR']!,
     );
 
     await Future.forEach(setOfRelays, (relayUrl) async {

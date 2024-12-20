@@ -14,23 +14,9 @@ COPY . .
 # Ensure dependencies are properly installed
 RUN dart pub get --offline
 
-ARG NOSTR
-ARG BLUESKY_IDENTIFIER
-ARG BLUESKY_PASSWORD
-ARG MASTODON_BEARER_TOKEN
-
-# Then use ENV to make them available at runtime
-ENV NOSTR=$NOSTR
-ENV BLUESKY_IDENTIFIER=$BLUESKY_IDENTIFIER
-ENV BLUESKY_PASSWORD=$BLUESKY_PASSWORD
-ENV MASTODON_BEARER_TOKEN=$MASTODON_BEARER_TOKEN
 
 # Compile the application
 RUN dart compile exe lib/main.dart  \
-    --define=NOSTR="${NOSTR}" \
-    --define=BLUESKY_IDENTIFIER="${BLUESKY_IDENTIFIER}" \
-    --define=BLUESKY_PASSWORD="${BLUESKY_PASSWORD}" \
-    --define=MASTODON_BEARER_TOKEN="${MASTODON_BEARER_TOKEN}" \
     -o bitcoin_ath_bot
 
 # # Create a smaller runtime image

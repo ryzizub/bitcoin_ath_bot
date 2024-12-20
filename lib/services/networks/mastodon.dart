@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bitcoin_ath_bot/services/networks/network.dart';
 import 'package:bitcoin_ath_bot/utils/utils.dart';
 import 'package:mason_logger/mason_logger.dart';
@@ -16,7 +18,7 @@ class MastodonService extends NetworkService {
       final mastodon = MastodonApi(
         instance: 'mastodon.social',
         // ignore: avoid_redundant_argument_values
-        bearerToken: const String.fromEnvironment('MASTODON_BEARER_TOKEN'),
+        bearerToken: Platform.environment['MASTODON_BEARER_TOKEN']!,
         retryConfig: RetryConfig(
           maxAttempts: 5,
           jitter: Jitter(

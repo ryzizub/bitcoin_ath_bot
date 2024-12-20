@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:atproto/atproto.dart';
 import 'package:bitcoin_ath_bot/services/networks/network.dart';
 import 'package:bitcoin_ath_bot/utils/utils.dart';
@@ -15,8 +17,8 @@ class BlueskyService extends NetworkService {
 
     try {
       final session = await createSession(
-        identifier: const String.fromEnvironment('BLUESKY_IDENTIFIER'),
-        password: const String.fromEnvironment('BLUESKY_PASSWORD'),
+        identifier: Platform.environment['BLUESKY_IDENTIFIER']!,
+        password: Platform.environment['BLUESKY_PASSWORD']!,
       );
 
       final bluesky = Bluesky.fromSession(session.data);
