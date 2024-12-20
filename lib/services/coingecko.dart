@@ -11,7 +11,6 @@ class CoinGeckoService {
       vsCurrencies: ['usd'],
     );
 
-    // return price.data.first.getPriceIn('usd')?.toInt();
-    return 108135;
+    return price.data.first.getPriceIn('usd')?.toInt();
   }
 }

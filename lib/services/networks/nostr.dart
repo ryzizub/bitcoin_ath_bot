@@ -51,7 +51,7 @@ class NostrService extends NetworkService {
     final websocket = await WebSocket.connect(
       relayUrl,
     );
-    // websocket.add(event.serialize());
+    websocket.add(event.serialize());
     await Future<dynamic>.delayed(const Duration(seconds: 1));
     await websocket.close();
   }

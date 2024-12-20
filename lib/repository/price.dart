@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bitcoin_ath_bot/services/coingecko.dart';
 import 'package:bitcoin_ath_bot/services/local_storage.dart';
 import 'package:mason_logger/mason_logger.dart';
@@ -15,7 +17,7 @@ class PriceRepository {
   LocalStorageService localStorageService;
 
   Future<int?> getUpdatedATHOrNull() async {
-    final price = await _coinGeckoService.getPrice();
+    var price = await _coinGeckoService.getPrice();
 
     if (price == null) {
       _logger.err('No price found');
@@ -25,6 +27,10 @@ class PriceRepository {
     }
 
     final currentATH = await localStorageService.getATH();
+
+    if (currentATH == null) {
+      price = int.parse(Platform.environment['STARTING_ATH']!);
+    }
 
     if (currentATH == null || price > currentATH) {
       await localStorageService.saveATH(price);
