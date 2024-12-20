@@ -7,9 +7,21 @@
 
 ## Usage
 
+Define env variables
+- NOSTR
+- BLUESKY_IDENTIFIER
+- BLUESKY_PASSWORD
+- MASTODON_BEARER_TOKEN
+- STARTING_ATH
+
 ```sh
-$ dart lib/main.dart --define=NOSTR={your_nostr_key}
+$ dart lib/main.dart
 ```
+
+## Deploy
+
+provided Dockerfile
+
 
 [license_badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [license_link]: https://opensource.org/licenses/MIT
