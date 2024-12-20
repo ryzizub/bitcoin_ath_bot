@@ -32,9 +32,34 @@ WORKDIR /app
 # Copy the compiled executable
 COPY --from=build /app/bitcoin_ath_bot ./
 
-# Create a shell script to run the bot and log output
-RUN echo '#!/bin/sh\n/app/bitcoin_ath_bot >> /var/log/cron.log 2>&1' > /app/run-bot.sh \
+# Create a wrapper script that loads environment variables and runs the bot
+RUN echo '#!/bin/sh\n\
+# Load environment variables\n\
+if [ -f /app/env.sh ]; then\n\
+    . /app/env.sh\n\
+fi\n\
+/app/bitcoin_ath_bot >> /var/log/cron.log 2>&1' > /app/run-bot.sh \
     && chmod +x /app/run-bot.sh
+
+# Create env.sh script (will be populated at runtime)
+RUN touch /app/env.sh && chmod +x /app/env.sh
+
+# Script to setup environment variables and start services
+COPY <<-"EOF" /app/entrypoint.sh
+#!/bin/sh
+# Clear existing env.sh
+echo "#!/bin/sh" > /app/env.sh
+
+# Export all environment variables to env.sh
+env | while read -r line; do
+    echo "export $line" >> /app/env.sh
+done
+
+# Start cron and tail logs
+cron && tail -f /var/log/cron.log
+EOF
+
+RUN chmod +x /app/entrypoint.sh
 
 # Set up the cron job
 RUN echo "*/1 * * * * /app/run-bot.sh" | crontab -
@@ -42,5 +67,5 @@ RUN echo "*/1 * * * * /app/run-bot.sh" | crontab -
 # Create the log file
 RUN touch /var/log/cron.log
 
-# Start cron and tail the logs
-CMD cron && tail -f /var/log/cron.log
+# Use the entrypoint script instead of direct cron command
+CMD ["/app/entrypoint.sh"]
