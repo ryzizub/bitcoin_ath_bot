@@ -7,7 +7,7 @@ class LocalStorageService {
     await BoxCollection.open(
       'Boxes',
       {'price'},
-      path: '/app/hive',
+      path: 'hive',
     );
   }
 
